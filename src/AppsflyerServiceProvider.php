@@ -20,10 +20,22 @@
 namespace Jlorente\Laravel\Appsflyer;
 
 use Jlorente\Appsflyer\Appsflyer;
+use Jlorente\Appsflyer\Config;
+use Jlorente\Appsflyer\ConfigInterface;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class AppsflyerServiceProvider.
+ * 
+ * @author Jose Lorente <jose.lorente.martin@gmail.com>
+ */
 class AppsflyerServiceProvider extends ServiceProvider
 {
+
+    /**
+     * @inheritdoc
+     */
+    protected $defer = true;
 
     /**
      * {@inheritDoc}
@@ -41,7 +53,11 @@ class AppsflyerServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'appsflyer', 'appsflyer.config'
+            'appsflyer'
+            , 'appsflyer.config'
+            , Appsflyer::class
+            , Config::class
+            , ConfigInterface::class
         ];
     }
 
@@ -54,15 +70,12 @@ class AppsflyerServiceProvider extends ServiceProvider
     {
         $this->app->singleton('appsflyer', function ($app) {
             $config = $app['config']->get('services.appsflyer');
-
             $devKey = isset($config['dev_key']) ? $config['dev_key'] : null;
-
             $apiToken = isset($config['api_token']) ? $config['api_token'] : null;
-
             return new Appsflyer($devKey, $apiToken);
         });
 
-        $this->app->alias('appsflyer', 'Jlorente\Appsflyer\Appsflyer');
+        $this->app->alias('appsflyer', Appsflyer::class);
     }
 
     /**
@@ -75,10 +88,8 @@ class AppsflyerServiceProvider extends ServiceProvider
         $this->app->singleton('appsflyer.config', function ($app) {
             return $app['appsflyer']->getConfig();
         });
-
-        $this->app->alias('appsflyer.config', 'Jlorente\Appsflyer\Config');
-
-        $this->app->alias('appsflyer.config', 'Jlorente\Appsflyer\ConfigInterface');
+        $this->app->alias('appsflyer.config', Config::class);
+        $this->app->alias('appsflyer.config', ConfigInterface::class);
     }
 
 }

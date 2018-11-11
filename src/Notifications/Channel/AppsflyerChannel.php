@@ -60,7 +60,7 @@ class AppsflyerChannel
     public function send($notifiable, Notification $notification)
     {
         $message = $notification->toAppsflyer($notifiable);
-        if (config('services.appsflyer.is_active') === true) {
+        if (config('services.appsflyer.is_active') === true && isset($message->payload['appsflyer_id'])) {
             return $this->client->inAppEvent()->create($message->platform, $message->payload);
         } else {
             return true;
