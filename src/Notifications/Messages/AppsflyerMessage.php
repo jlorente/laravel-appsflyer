@@ -49,8 +49,12 @@ class AppsflyerMessage
      */
     public function __construct($platform = null, array $payload = null)
     {
-        $this->platform($platform);
-        $this->payload($payload);
+        if ($platform) {
+            $this->platform($platform);
+        }
+        if ($payload) {
+            $this->payload($payload);
+        }
     }
 
     /**
