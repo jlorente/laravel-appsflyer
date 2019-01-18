@@ -39,7 +39,7 @@ class AppsflyerMessage
      *
      * @var array
      */
-    public $payload;
+    public $payload = [];
 
     /**
      * Create a new appsflyer message instance.
